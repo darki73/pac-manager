@@ -1,0 +1,17 @@
+[Unit]
+Description=Proxy Automatic Configuration Generator
+ConditionPathExists=/usr/local/bin/pacm
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+startLimitIntervalSec=60
+
+WorkingDirectory=/etc/pac.d
+ExecStart=/usr/local/bin/pacm run
+SyslogIdentifier=pacm
+
+[Install]
+WantedBy=multi-user.target

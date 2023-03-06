@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+rm -f dist/pacm
+
+if [ -z "${VERSION}" ]; then
+    VERSION=$(git describe --abbrev=0)
+fi
+
+if [ -z "${COMMIT}" ]; then
+    COMMIT=$(git rev-parse HEAD)
+fi
+
+if [ -z "$BUILDER" ]; then
+    BUILDER=github-actions
+fi
+
+if [ -z "$DATE" ]; then
+    DATE=$(date -u '+%Y-%m-%d_%I:%M:%S%p')
+fi
+
+CGO_ENABLED=1 go build ${FLAGS[*]} -ldflags "-s -w \
+    -X github.com/darki73/pac-manager/pkg/version.version=$VERSION \
+    -X github.com/darki73/pac-manager/pkg/version.commit=$COMMIT \
+    -X github.com/darki73/pac-manager/pkg/version.buildDate=$DATE \
+    -X github.com/darki73/pac-manager/pkg/version.builtBy=$BUILDER" \
+    -o dist/pacm .

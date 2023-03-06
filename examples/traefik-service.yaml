@@ -1,0 +1,17 @@
+http:
+  services:
+    proxy:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.2.200:80"
+    proxy-pacm:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.2.200:8080"
+  routers:
+    proxy-pacm:
+      rule: Host(`proxy.domain.org`)
+      service: proxy-pacm
+    proxy:
+      rule: Host(`proxy.domain.org`) && PathPrefix(`/files`)
+      service: proxy
